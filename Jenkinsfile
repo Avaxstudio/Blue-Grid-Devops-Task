@@ -13,13 +13,6 @@ pipeline {
     }
 
     stages {
-        stage('Pre-clean Docker') {
-            steps {
-                echo '🧹 Pruning Docker sistem...'
-                sh 'docker system prune -af'
-            }
-        }
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -45,7 +38,8 @@ pipeline {
             steps {
                 sh '''
                     docker rm -f ${CONTAINER_NAME} || true
-                    docker run -d --name ${CONTAINER_NAME} -p ${EXTERNAL_PORT}:${INTERNAL_PORT} ${IMAGE_NAME}
+                    docker run -d --name ${CONTAINER_NAME} \
+                      -p ${EXTERNAL_PORT}:${INTERNAL_PORT} ${IMAGE_NAME}
                 '''
             }
         }
@@ -62,9 +56,6 @@ pipeline {
         always {
             echo '🧹 Final cleanup...'
             cleanWs()
-            sh 'docker container prune -f'
-            sh 'docker image prune -f'
-            sh 'docker volume prune -f'
         }
     }
 }
