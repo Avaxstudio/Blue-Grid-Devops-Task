@@ -6,6 +6,7 @@ pipeline {
     }
 
     environment {
+        JAVA_TOOL_OPTIONS = '-Xmx512m'
         IMAGE_NAME = 'bluegrid-app'
         CONTAINER_NAME = 'bluegrid-container'
         EXTERNAL_PORT = '777'
@@ -23,7 +24,7 @@ pipeline {
             steps {
                 dir('complete') {
                     sh 'chmod +x mvnw'
-                    sh './mvnw clean package -DskipTests=true -Xmx512m'
+                    sh './mvnw clean package -DskipTests=true'
                 }
             }
         }
