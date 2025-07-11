@@ -8,6 +8,11 @@ pipeline {
         INTERNAL_PORT = '8080'
     }
 
+    triggers {
+    githubPush()
+    }
+
+
     stages {
         stage('Checkout') {
             steps {
