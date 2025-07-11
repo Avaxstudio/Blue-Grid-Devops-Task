@@ -41,9 +41,19 @@ pipeline {
 
         stage('Health Check') {
             steps {
-                sh 'sleep 5' // da aplikacija ima vremena da se pokrene
+                sh 'sleep 5'
                 sh 'curl -f http://localhost:${EXTERNAL_PORT}/greeting'
             }
+        }
+    }
+
+    post {
+        always {
+            echo '🔄 Cleaning workspace and Docker leftovers...'
+            cleanWs()
+            sh 'docker container prune -f'
+            sh 'docker image prune -f'
+            sh 'docker volume prune -f'
         }
     }
 }
