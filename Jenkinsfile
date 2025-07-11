@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    triggers {
+        githubPush()
+    }
+
     environment {
         IMAGE_NAME = 'bluegrid-app'
         CONTAINER_NAME = 'bluegrid-container'
@@ -8,12 +12,14 @@ pipeline {
         INTERNAL_PORT = '8080'
     }
 
-    triggers {
-    githubPush()
-    }
-
-
     stages {
+        stage('Pre-clean Docker') {
+            steps {
+                echo '🧹 Pruning Docker sistem...'
+                sh 'docker system prune -af'
+            }
+        }
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -54,7 +60,7 @@ pipeline {
 
     post {
         always {
-            echo '🔄 Cleaning workspace and Docker leftovers...'
+            echo '🧹 Final cleanup...'
             cleanWs()
             sh 'docker container prune -f'
             sh 'docker image prune -f'
