@@ -23,7 +23,7 @@ pipeline {
             steps {
                 dir('complete') {
                     sh 'chmod +x mvnw'
-                    sh './mvnw clean package -DskipTests=true'
+                    sh './mvnw clean package -DskipTests=true -Xmx512m'
                 }
             }
         }
